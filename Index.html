@@ -3,8 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Bingo Card Maker</title>
+  <title>Bingo Card Maker - Pro Edition</title>
   <style>
+    :root {
+      --cell-height: 60px;
+      --card-spacing: 5mm;
+      --paper-size: a4;
+      --top-print-margin: 1.0cm;
+      --page-horizontal-margin: 1cm;
+      --bingo-font-size: 14pt;
+      --bingo-font-family: inherit;
+      --color-card: #28a745; /* Green */
+      --color-call: #dc3545; /* Red */
+      --color-off: #cbd5e0;  /* Gray */
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       margin: 0;
@@ -13,8 +26,8 @@
       color: #333;
       display: flex;
       justify-content: center;
-      align-items: center; /* Vertically centered the container */
-      padding: 20px; /* Reduced padding for a more centered look */
+      align-items: center;
+      padding: 10px;
     }
 
     .container {
@@ -25,1190 +38,373 @@
       max-width: 800px;
       width: 100%;
       box-sizing: border-box;
-    }
-
-    h2 {
-      color: #4a5568;
-      text-align: center;
-      margin-bottom: 30px;
-      font-size: 28px;
-    }
-
-    .input-section {
-      margin-bottom: 30px;
-    }
-
-    textarea {
-      width: 100%;
-      height: 200px;
-      resize: vertical;
-      padding: 12px;
-      font-size: 14px;
-      box-sizing: border-box;
-      border: 2px solid #e2e8f0;
-      border-radius: 8px;
-      transition: border-color 0.3s ease;
-    }
-
-    textarea:focus {
-      outline: none;
-      border-color: #667eea;
-    }
-
-    label {
-      display: block;
-      margin-top: 20px;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: #4a5568;
-    }
-
-    select, input[type="text"], input[type="number"] {
-      width: 100%;
-      padding: 10px;
-      font-size: 14px;
-      border: 2px solid #e2e8f0;
-      border-radius: 8px;
-      background: white;
-      box-sizing: border-box;
-    }
-    
-    .input-group {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-      margin-top: 15px;
-    }
-    
-    .button-row {
-      display: flex;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px 20px;
-      margin-top: 15px;
-      font-size: 16px;
-      font-weight: 600;
-      color: white;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
-    }
-
-    button:active {
-      transform: translateY(0);
-    }
-
-    button:disabled {
-      background: #cbd5e0;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-
-    .settings-btn {
-      background: linear-gradient(135deg, #718096 0%, #4a5568 100%) !important;
-    }
-    
-    .generate-btn {
-      background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%) !important;
-    }
-    
-    .print-btn {
-      background: linear-gradient(135deg, #2196F3 0%, #00BCD4 100%) !important;
-    }
-
-    .template-btn {
-      background: linear-gradient(135deg, #fd7e14 0%, #e83e8c 100%) !important;
-      margin-top: 5px !important;
-    }
-    
-    .swap-btn {
-      background: linear-gradient(135deg, #FFC107 0%, #FF9800 100%) !important;
-    }
-    
-    .monolingual-btn {
-      background: linear-gradient(135deg, #9C27B0 0%, #673AB7 100%) !important;
-    }
-    
-    .bi-lang-btn {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-    }
-    
-    .mono-lang-btn {
-        background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%) !important;
-    }
-
-    .status {
-      margin-top: 15px;
-      padding: 10px;
-      border-radius: 5px;
-      text-align: center;
-      display: none;
-    }
-
-    .status.success {
-      background: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
-    }
-
-    .status.error {
-      background: #f8d7da;
-      color: #721c24;
-      border: 1px solid #f5c6cb;
-    }
-
-    .status.info {
-      background: #d1ecf1;
-      color: #0c5460;
-      border: 1px solid #bee5eb;
-    }
-
-    .word-count, .language-mode {
-      font-size: 12px;
-      color: #666;
-      margin-top: 5px;
-    }
-
-    .language-mode {
-      font-weight: 600;
-    }
-
-    .feasibility-info {
-      font-size: 12px;
-      color: #666;
-      margin-top: 10px;
-      padding: 8px;
-      background: #f8f9fa;
-      border-left: 3px solid #667eea;
-    }
-    
-    /* Template selector */
-    .template-section {
-      margin: 20px 0;
-      padding: 15px;
-      background: #fff8dc;
-      border-radius: 8px;
-      border: 2px solid #f0e68c;
-    }
-
-    .template-header {
-      font-weight: 600;
-      color: #b8860b;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    
-    .wordlist-group {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      margin-bottom: 5px;
-    }
-    .wordlist-group button {
-      flex: 1;
-      margin-top: 0;
-    }
-    .wordlist-group .clear-btn {
-      flex: 0 0 50px;
-      padding: 8px;
-      background: #dc3545 !important;
-    }
-    .wordlist-group .clear-btn:hover {
-      background: #c82333 !important;
-    }
-    .wordlist-status {
-      font-size: 12px;
-      color: #856404;
-      font-style: italic;
-      margin-left: 10px;
-    }
-
-    /* Settings Modal */
-    #settingsModal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      z-index: 1000;
-      overflow-y: auto;
-    }
-
-    #settingsModal > div {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      max-width: 500px;
-      width: 90%;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-
-    #customFontGroup {
-        display: none;
-    }
-    
-    .modal-btn-group {
-      display: flex;
-      gap: 10px;
-      margin-top: 25px;
-    }
-    
-    /* Card Display */
-    #cardOutput {
-        display: none;
-        margin-top: 30px;
-        padding-top: 20px;
-        border-top: 2px solid #e2e8f0;
-    }
-    
-    .card-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      gap: 20px;
-      margin-bottom: 30px;
-    }
-
-    .bingo-card {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        border: 2pt solid #4a5568;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        padding: 5px;
-        box-sizing: border-box;
-    }
-    
-    .bingo-cell {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        height: var(--cell-height, 60px); /* Use CSS variable for height */
-        padding: 5px; /* Fixed padding */
-        border: 1pt solid #cbd5e0;
-        font-size: 14pt;
-        line-height: 1.2;
-        overflow: hidden;
-        word-break: break-word; /* Allow long words to break */
-        hyphens: auto; /* Enable hyphenation */
-        box-sizing: border-box;
-    }
-
-    /* Call List Specific Styles - Updated for a more compact layout */
-    #callListOutput {
-      display: none;
-      width: 100%;
-      margin-top: 30px;
-      padding: 20px;
-      border-top: 2px solid #e2e8f0;
-    }
-    
-    #callListOutput h3 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #4a5568;
-      font-size: 24px;
-    }
-
-    .call-list-grid {
-      display: grid;
-      gap: 10px;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      list-style-type: none;
-      padding: 0;
-      margin: 0;
-      font-size: 16px;
-    }
-    
-    .call-list-item {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .call-list-label {
-      font-weight: normal; /* Normal weight as requested */
-      margin-right: 10px;
-      flex-grow: 1;
-      word-break: break-word;
-    }
-
-    .call-checkboxes {
-      display: flex;
-      gap: 5px;
-      flex-shrink: 0;
-    }
-
-    .call-checkboxes input[type="checkbox"] {
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
-      width: 20px;
-      height: 20px;
-      border: 2px solid #cbd5e0;
-      border-radius: 4px;
-      cursor: pointer;
       position: relative;
     }
 
-    .call-checkboxes input[type="checkbox"]:checked {
-        background-color: #667eea;
-        border-color: #667eea;
-    }
+    h2 { color: #4a5568; text-align: center; margin-bottom: 25px; font-size: 28px; }
+
+    .template-section { margin: 20px 0; padding: 15px; background: #fff8dc; border-radius: 8px; border: 2px solid #f0e68c; }
+    .wordlist-group { display: flex; align-items: center; gap: 5px; margin-bottom: 5px; }
     
-    .call-checkboxes input[type="checkbox"]:checked::after {
-        content: '✔';
-        font-size: 14px;
-        color: white;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+    textarea {
+      width: 100%; height: 160px; resize: vertical; padding: 12px; font-size: 14px;
+      box-sizing: border-box; border: 2px solid #e2e8f0; border-radius: 8px;
     }
+
+    #modeLegend {
+      display: none; border: 2px solid #cbd5e0; border-radius: 10px; 
+      padding: 15px; margin: 15px 0; background: #fdfdfd; 
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); text-align: center;
+    }
+    .legend-items { font-size: 20px; font-weight: bold; margin-bottom: 5px; }
+    .legend-key { font-size: 11px; color: #718096; }
+
+    .input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+    .input-group label { display: block; margin-bottom: 4px; font-weight: 600; color: #4a5568; }
+    .input-group select, .input-group input { margin-top: 4px; padding: 8px; border-radius: 6px; border: 1px solid #cbd5e0; width: 100%; box-sizing: border-box; }
+
+    .button-row { display: flex; gap: 10px; margin-top: 15px; }
+    button {
+      width: 100%; padding: 12px; margin-top: 10px; font-size: 16px; font-weight: 600;
+      color: white; border: none; border-radius: 8px; cursor: pointer; transition: transform 0.1s;
+    }
+    button:active { transform: scale(0.98); }
+.load-btn { 
+  flex: 3; 
+  background: #fd7e14; 
+  margin-top: 0; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  white-space: nowrap; 
+  height: 40px; /* Forces uniform height */
+  line-height: 1;
+}
+
+.save-slot-btn { 
+  flex: 1; 
+  background: #4CAF50 !important; 
+  margin-top: 0; 
+  font-size: 14px; /* Increased to match other buttons */
+  height: 40px; 
+  line-height: 1;
+}
+
+.clear-btn { 
+  flex: 0.3; 
+  background: #dc !important; /* Was previously colour #dc3545 */
+  margin-top: 0; 
+  height: 40px; 
+  line-height: 1;
+  padding: 0; /* Prevents padding from inflating the box */
+}
+    .generate-btn { background: #4CAF50; }
+    .print-btn { background: #2196F3; }
+    .settings-btn { background: #718096; }
+
+    #previewModal, #settingsModal {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7); z-index: 2000; overflow-y: auto; padding: 20px;
+      box-sizing: border-box;
+    }
+    .modal-content {
+      background: white; margin: 40px auto; padding: 25px; border-radius: 15px;
+      max-width: 550px; width: 100%; position: relative; box-sizing: border-box;
+    }
+    #previewModal .modal-content { max-width: 850px; }
+
+    .bingo-card {
+      display: grid; border: 2pt solid #000; background: white; margin-bottom: var(--card-spacing);
+      page-break-inside: avoid; width: 100%; box-sizing: border-box;
+    }
+    .bingo-cell {
+      border: 1pt solid #000; display: flex; align-items: center; justify-content: center;
+      text-align: center; height: var(--cell-height); font-size: var(--bingo-font-size);
+      font-family: var(--bingo-font-family); padding: 5px; word-break: break-word; box-sizing: border-box;
+    }
+
+    .call-list-item { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; border-bottom: 1px solid #eee; padding: 5px; }
+    .checkbox-group { display: flex; gap: 4px; }
+    .checkbox-group input { width: 18px; height: 18px; }
+
+    /* Print-Only Call List Two Column Logic */
+    .call-list-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+    #printBuffer { display: none; }
 
     @media print {
-        @page {
-            size: var(--paper-size);
-            margin: var(--top-print-margin) var(--page-horizontal-margin) var(--bottom-print-margin) var(--page-horizontal-margin);
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            background: none;
-            color: black;
-            font-size: 12pt;
-            display: block;
-        }
-
-        .container > h2,
-        .template-section,
-        .input-section,
-        .status,
-        .print-btn,
-        #settingsBtn {
-            display: none !important;
-        }
-        
-        .container {
-            box-shadow: none !important;
-            padding: 0 !important;
-            max-width: 100% !important;
-            margin: 0 !important;
-        }
-
-        #cardOutput, #callListOutput {
-            display: block !important;
-            border: none !important;
-            padding: 0 !important;
-            margin-top: 0 !important;
-            margin-bottom: var(--card-spacing, 10mm);
-        }
-        
-        .card-container {
-            display: block;
-            margin: 0;
-            padding: 0;
-        }
-
-        .bingo-card {
-            width: 100%;
-            height: auto;
-            max-width: 100%;
-            box-shadow: none;
-            border-radius: 0;
-            border-width: 2pt;
-            break-inside: avoid;
-            margin-bottom: var(--card-spacing);
-        }
-        
-        .bingo-card:not(:first-child) {
-            margin-top: var(--card-spacing);
-        }
-        
-        /* Updated Call list for printing */
-        .call-list-grid {
-            display: block; /* Use block to allow columns */
-            -webkit-column-count: 2; /* Two columns for printing */
-            -moz-column-count: 2;
-            column-count: 2;
-            gap: 20px;
-        }
-        .call-list-item {
-          break-inside: avoid;
-        }
+      .no-print, #previewModal, #settingsModal { display: none !important; }
+      #printBuffer { display: block !important; }
+      body { background: white; display: block; }
+      .container { display: none; }
+      @page { size: var(--paper-size); margin: var(--top-print-margin) var(--page-horizontal-margin); }
+      .call-list-container { page-break-before: always; }
     }
   </style>
-  <link id="customFontLink" rel="stylesheet" href="">
 </head>
 <body>
-  <div class="container">
+
+  <div class="container no-print">
     <h2>📄 Bingo Card Maker</h2>
     
-    <!-- Template Quick Start -->
     <div class="template-section">
-      <div class="template-header">
-        🚀 Quick Start - Manage & Load Wordlists
-      </div>
-      <small>Click to load, or click to upload a new list if one isn't saved.</small>
+      <div style="font-weight:600; color:#b8860b; margin-bottom:10px;">💾 Wordlist Manager</div>
       <div class="wordlist-group">
-        <button id="loadWordlist1" class="template-btn">Wordlist #1</button>
-        <button id="clearWordlist1" class="clear-btn">❌</button>
+        <button id="load1" class="load-btn">Slot 1 (Empty)</button>
+        <button onclick="saveToSlot(1)" class="save-slot-btn">💾 Save</button>
+        <button onclick="clearSlot(1)" class="clear-btn">❌</button>
       </div>
       <div class="wordlist-group">
-        <button id="loadWordlist2" class="template-btn">Wordlist #2</button>
-        <button id="clearWordlist2" class="clear-btn">❌</button>
+        <button id="load2" class="load-btn">Slot 2 (Empty)</button>
+        <button onclick="saveToSlot(2)" class="save-slot-btn">💾 Save</button>
+        <button onclick="clearSlot(2)" class="clear-btn">❌</button>
       </div>
       <div class="wordlist-group">
-        <button id="loadWordlist3" class="template-btn">Wordlist #3</button>
-        <button id="clearWordlist3" class="clear-btn">❌</button>
+        <button id="load3" class="load-btn">Slot 3 (Empty)</button>
+        <button onclick="saveToSlot(3)" class="save-slot-btn">💾 Save</button>
+        <button onclick="clearSlot(3)" class="clear-btn">❌</button>
       </div>
     </div>
+
+    <textarea id="wordInput" oninput="updateWordCount()" placeholder="Apple = Manzana&#10;Banana = Plátano..."></textarea>
     
-    <div class="input-section">
-      <label for="wordInput">Enter words (comma or space separated):</label>
-      <textarea id="wordInput" placeholder="Single Language Mode:&#10;hello, good morning, how are you, cat, dog&#10;&#10;Multi-Language Mode (English = Vernacular):&#10;hello = hola&#10;good morning = buenos días&#10;how are you = ¿cómo estás?&#10;cat = gato&#10;dog = perro&#10;&#10;(Use commas or new lines to separate entries)"></textarea>
-      <div class="word-count" id="wordCount">0 words entered</div>
-      <div class="language-mode" id="languageMode"></div>
-      <div class="feasibility-info" id="feasibilityInfo"></div>
-      
-      <div class="button-row" style="display: none;" id="multiLangControls">
-        <button id="toggleBilingualBtn" class="bi-lang-btn"></button>
-        <button id="toggleMonolingualBtn" class="mono-lang-btn"></button>
+    <div id="modeLegend">
+      <div class="legend-items" id="legendItems"></div>
+      <div class="legend-key">
+        (<span style="color: var(--color-card)">●</span> Card Content | <span style="color: var(--color-call)">●</span> Teacher Call)
       </div>
-
-      <div class="input-group">
-        <div>
-          <label for="numberOfCards">Number of cards to generate:</label>
-          <select id="numberOfCards">
-            <option value="5">5 cards</option>
-            <option value="10" selected>10 cards</option>
-            <option value="15">15 cards</option>
-            <option value="20">20 cards</option>
-            <option value="25">25 cards</option>
-            <option value="30">30 cards</option>
-            <option value="50">50 cards</option>
-            <option value="100">100 cards</option>
-          </select>
-        </div>
-      </div>
-
-      <button id="generateCardsBtn" class="generate-btn">🎲 Generate Cards</button>
-      <button id="printCardsBtn" class="print-btn" style="display: none;">🖨️ Print Cards</button>
-      <button id="settingsBtn" class="settings-btn">⚙️ Advanced Settings</button>
     </div>
-    
-    <div class="status" id="status"></div>
 
-    <div id="cardOutput"></div>
-    <div id="callListOutput"></div>
+    <div id="wordCountLabel" style="font-size:12px; color:#666; margin-top:5px;">0 words entered</div>
+
+    <div class="input-group">
+      <div>
+        <label>Grid Size:</label>
+        <select id="gridSize">
+          <option value="3">3 x 3</option>
+          <option value="4" selected>4 x 4</option>
+          <option value="5">5 x 5</option>
+        </select>
+      </div>
+      <div>
+        <label>Number of Cards:</label>
+        <input type="number" id="numCards" value="10" min="1" max="100">
+      </div>
+    </div>
+
+    <div class="button-row" id="langButtons" style="display:none;">
+      <button onclick="toggleBilingual()" style="background:#FF9800;">↔️ Swap Lang</button>
+      <button onclick="toggleMonolingual()" style="background:#9C27B0;">➡️ Monolingual Mode</button>
+    </div>
+
+    <button onclick="generateCards(true)" class="generate-btn">🎲 Generate & Preview</button>
+    <button onclick="handlePrint()" class="print-btn">🖨️ Print Everything</button>
+    <button onclick="showSettings()" class="settings-btn">⚙️ Advanced Settings</button>
   </div>
 
-  <!-- Settings Modal -->
+  <div id="previewModal">
+    <div class="modal-content">
+      <button onclick="closeModal('previewModal')" style="background:#333; width:auto; float:right; padding: 5px 15px;">Close</button>
+      <h3>Preview: Generated Cards</h3>
+      <div id="previewArea"></div>
+    </div>
+  </div>
+
   <div id="settingsModal">
-    <div>
-      <h3 style="margin-top: 0; color: #4a5568; text-align: center;">⚙️ Advanced Settings</h3>
-      
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-        <div>
-          <label for="fontSize">Font Size (pt):</label>
-          <input type="number" id="fontSize" value="14" min="8" max="30">
-        </div>
-
-        <div>
-          <label for="cardSpacing">Card Spacing (mm):</label>
-          <input type="number" id="cardSpacing" value="10" min="0" max="250">
-        </div>
-
-        <div>
-          <label for="fontFamilySelect">Font Family:</label>
-          <select id="fontFamilySelect">
-            <option value="Arial">Arial</option>
-            <option value="Verdana">Verdana</option>
-            <option value="'Times New Roman'">Times New Roman</option>
-            <option value="Georgia">Georgia</option>
-            <option value="Courier New">Courier New</option>
-            <option value="Custom">Custom...</option>
-          </select>
-        </div>
-        
-        <div id="customFontGroup">
-          <label for="fontFamilyCustom">System Font Name:</label>
-          <input type="text" id="fontFamilyCustom" placeholder="e.g., Andika, Gentium Plus">
-        </div>
-
-        <div>
-          <label for="cellHeight">Cell Height (px):</label>
-          <input type="number" id="cellHeight" value="60" min="40" max="150">
-        </div>
-        
-        <div>
-          <label for="paperSize">Paper Size:</label>
-          <select id="paperSize">
-            <option value="a4" selected>A4 (210 x 297 mm)</option>
-            <option value="letter">Letter (216 x 279 mm)</option>
-            <option value="legal">Legal (216 x 356 mm)</option>
-          </select>
-        </div>
-
-        <!-- New margin controls -->
-        <div>
-          <label for="topPrintMargin">Top Print Margin (cm):</label>
-          <input type="number" id="topPrintMargin" value="1.5" step="0.1" min="0">
-        </div>
-        
-        <div>
-          <label for="bottomPrintMargin">Bottom Print Margin (cm):</label>
-          <input type="number" id="bottomPrintMargin" value="0.5" step="0.1" min="0">
-        </div>
-        
+    <div class="modal-content">
+      <h3 style="margin-top:0;">⚙️ Advanced Settings</h3>
+      <div class="input-group">
+        <div><label>Font Size (pt):</label><input type="number" id="optFontSize" value="14"></div>
+        <div><label>Cell Height (px):</label><input type="number" id="optCellHeight" value="60"></div>
+        <div><label>Spacing (mm):</label><input type="number" id="optSpacing" value="5"></div>
+        <div><label>Paper Size:</label><select id="optPaper"><option value="a4">A4</option><option value="letter">Letter</option></select></div>
       </div>
-
-      <div class="modal-btn-group">
-        <button id="saveSettings" style="flex: 1;">💾 Save Settings</button>
-        <button id="cancelSettings" style="flex: 1; background: #e2e8f0; color: #4a5568;">❌ Cancel</button>
+      <div class="input-group">
+          <div style="grid-column: span 2;">
+            <label>Custom System Font:</label>
+            <input type="text" id="optFontFamily" placeholder="e.g. Andika, Calibri">
+          </div>
       </div>
+      <button onclick="applySettings()" style="background:#4CAF50;">Apply Settings</button>
     </div>
   </div>
+
+  <div id="printBuffer"></div>
 
   <script>
-    let settings = {
-      fontSize: 14,
-      cardSpacing: 10,
-      cellHeight: 60,
-      cellPadding: 5, // Hardcoded
-      fontFamily: 'Arial',
-      paperSize: 'a4',
-      topPrintMargin: 1.5,
-      bottomPrintMargin: 0.5,
-      pageMargins: {
-          a4: { horizontal: '1cm' },
-          letter: { horizontal: '0.8cm' },
-          legal: { horizontal: '0.8cm' }
-      }
-    };
-    
-    // Global state to manage the display mode
-    let appMode = 'single'; // 'single', 'bilingual', 'monolingual'
-    let bilingualPrimaryLanguage = 'english'; // 'english' or 'vernacular'
-    let monolingualLanguage = 'english'; // 'english' or 'vernacular'
-    
-    let parsedData = { words: [], callList: [], english: [], vernacular: [], mode: 'single', error: null };
+    let appMode = 'bilingual', subMode = 'primary';
+    let wordData = { left: [], right: [] };
+    let cardsGenerated = false;
 
-    function getWordlist(id) {
-        return localStorage.getItem(`wordlist_${id}`);
-    }
-
-    function getWordlistName(id) {
-        return localStorage.getItem(`wordlist_name_${id}`);
-    }
-
-    function setWordlist(id, content, name) {
-        localStorage.setItem(`wordlist_${id}`, content);
-        localStorage.setItem(`wordlist_name_${id}`, name);
-    }
-
-    function clearWordlist(id) {
-        localStorage.removeItem(`wordlist_${id}`);
-        localStorage.removeItem(`wordlist_name_${id}`);
-    }
-
-    function updateWordlistButtons() {
-        for (let i = 1; i <= 3; i++) {
-            const button = document.getElementById(`loadWordlist${i}`);
-            const savedName = getWordlistName(i);
-            if (savedName) {
-                button.textContent = savedName;
-            } else {
-                button.textContent = `Wordlist #${i} (Empty)`;
-            }
-        }
-    }
-    
-    function loadWordlist(id) {
-        const savedContent = getWordlist(id);
-        if (savedContent) {
-            document.getElementById('wordInput').value = savedContent;
-            updateWordCount();
-            showStatus(`${getWordlistName(id)} loaded successfully!`, 'success');
-        } else {
-            const fileInput = document.createElement('input');
-            fileInput.type = 'file';
-            fileInput.accept = '.txt, .csv';
-            fileInput.style.display = 'none';
-            document.body.appendChild(fileInput);
-            
-            fileInput.addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        const content = event.target.result;
-                        setWordlist(id, content, file.name);
-                        updateWordlistButtons();
-                        document.getElementById('wordInput').value = content;
-                        updateWordCount();
-                        showStatus(`${file.name} loaded and saved!`, 'success');
-                    };
-                    reader.readAsText(file);
-                }
-                fileInput.remove();
-            });
-            
-            fileInput.click();
-        }
-    }
-    
-    async function confirm(message) {
-        return new Promise((resolve) => {
-            const modal = document.createElement('div');
-            modal.style = `
-                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-                background: rgba(0,0,0,0.5); z-index: 2000;
-                display: flex; justify-content: center; align-items: center;
-            `;
-            
-            const content = document.createElement('div');
-            content.style = `
-                background: white; padding: 20px; border-radius: 10px;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.3); max-width: 400px;
-                text-align: center;
-            `;
-            
-            const p = document.createElement('p');
-            p.textContent = message;
-            
-            const buttonContainer = document.createElement('div');
-            buttonContainer.style = `margin-top: 20px;`;
-            
-            const okButton = document.createElement('button');
-            okButton.textContent = 'Yes';
-            okButton.style = `
-                padding: 10px 20px; background: #667eea; color: white;
-                border: none; border-radius: 5px; cursor: pointer;
-                margin-right: 10px;
-            `;
-            
-            const cancelButton = document.createElement('button');
-            cancelButton.textContent = 'No';
-            cancelButton.style = `
-                padding: 10px 20px; background: #e2e8f0; color: #4a5568;
-                border: none; border-radius: 5px; cursor: pointer;
-            `;
-            
-            okButton.onclick = () => {
-                document.body.removeChild(modal);
-                resolve(true);
-            };
-            cancelButton.onclick = () => {
-                document.body.removeChild(modal);
-                resolve(false);
-            };
-            
-            buttonContainer.appendChild(okButton);
-            buttonContainer.appendChild(cancelButton);
-            content.appendChild(p);
-            content.appendChild(buttonContainer);
-            modal.appendChild(content);
-            document.body.appendChild(modal);
-        });
-    }
-    
-    async function clearWordlistHandler(id) {
-        if (await confirm(`Are you sure you want to clear Wordlist #${id}?`)) {
-            clearWordlist(id);
-            updateWordlistButtons();
-            showStatus(`Wordlist #${id} cleared.`, 'info');
-        }
-    }
-
-    function loadSettings() {
-      const defaultSettings = {
-        fontSize: 14,
-        cardSpacing: 10,
-        cellHeight: 60,
-        cellPadding: 5,
-        fontFamily: 'Arial',
-        paperSize: 'a4',
-        topPrintMargin: 1.5,
-        bottomPrintMargin: 0.5,
-        pageMargins: {
-            a4: { horizontal: '1cm' },
-            letter: { horizontal: '0.8cm' },
-            legal: { horizontal: '0.8cm' }
-        }
-      };
-
-      try {
-        const savedSettings = localStorage.getItem('bingoSettings');
-        if (savedSettings) {
-            settings = JSON.parse(savedSettings);
-        } else {
-            settings = defaultSettings;
-        }
-      } catch (e) {
-        console.error("Failed to parse settings from localStorage, using defaults.", e);
-        settings = defaultSettings;
-        showStatus('Warning: Corrupted settings found. Default settings have been applied.', 'error');
-      }
-      
-      // Ensure cellPadding is always the hardcoded value
-      settings.cellPadding = 5;
-      
-      document.getElementById('fontSize').value = settings.fontSize;
-      document.getElementById('cardSpacing').value = settings.cardSpacing;
-      document.getElementById('cellHeight').value = settings.cellHeight;
-      document.getElementById('paperSize').value = settings.paperSize;
-      document.getElementById('topPrintMargin').value = settings.topPrintMargin;
-      document.getElementById('bottomPrintMargin').value = settings.bottomPrintMargin;
-
-      const fontSelect = document.getElementById('fontFamilySelect');
-      const customFontGroup = document.getElementById('customFontGroup');
-      const customFontInput = document.getElementById('fontFamilyCustom');
-
-      let customFontExists = false;
-      for (const option of fontSelect.options) {
-        if (option.value === settings.fontFamily) {
-          fontSelect.value = settings.fontFamily;
-          customFontExists = true;
-          break;
-        }
-      }
-      if (!customFontExists) {
-        fontSelect.value = 'Custom';
-        customFontGroup.style.display = 'block';
-        customFontInput.value = settings.fontFamily;
-      } else {
-        customFontGroup.style.display = 'none';
-      }
-      
-      loadCustomFont(settings.fontFamily);
-    }
-
-    function loadCustomFont(fontName) {
-      // This function now clears the link tag, ensuring we only use local fonts.
-      const link = document.getElementById('customFontLink');
-      link.href = '';
-    }
-
-    function saveSettings() {
-      settings.fontSize = parseInt(document.getElementById('fontSize').value, 10);
-      settings.cardSpacing = parseInt(document.getElementById('cardSpacing').value, 10);
-      settings.cellHeight = parseInt(document.getElementById('cellHeight').value, 10);
-      
-      const fontSelect = document.getElementById('fontFamilySelect');
-      if (fontSelect.value === 'Custom') {
-        settings.fontFamily = document.getElementById('fontFamilyCustom').value;
-      } else {
-        settings.fontFamily = fontSelect.value;
-      }
-      
-      settings.paperSize = document.getElementById('paperSize').value;
-      settings.topPrintMargin = parseFloat(document.getElementById('topPrintMargin').value);
-      settings.bottomPrintMargin = parseFloat(document.getElementById('bottomPrintMargin').value);
-
-      localStorage.setItem('bingoSettings', JSON.stringify(settings));
-      loadCustomFont(settings.fontFamily);
-    }
-
-    function parseInput(input) {
-      const normalizedInput = input.replace(/==/g, '=');
-      const entries = normalizedInput.split(/[,\r\n]+/).map(w => w.trim()).filter(w => w.length > 0);
-      
-      const hasMultiLanguage = entries.some(entry => entry.includes('='));
-      
-      if (!hasMultiLanguage) {
-        return {
-          mode: 'single',
-          words: entries,
-          callList: entries,
-          english: entries,
-          vernacular: entries,
-          error: null
-        };
-      }
-      
-      const invalidEntries = [];
-      const malformedEntries = [];
-      
-      entries.forEach((entry) => {
-        if (!entry.includes('=')) {
-          invalidEntries.push(entry);
-        } else {
-          const parts = entry.split('=').map(part => part.trim());
-          if (parts.length !== 2 || parts[0].trim() === '' || parts[1].trim() === '') {
-            malformedEntries.push(entry);
-          }
-        }
-      });
-      
-      if (invalidEntries.length > 0) {
-        return {
-          mode: 'mixed',
-          words: [],
-          callList: [],
-          english: [],
-          vernacular: [],
-          error: `Mixed format detected! Entries must use the format 'English = Vernacular'.`
-        };
-      }
-      
-      if (malformedEntries.length > 0) {
-        return {
-          mode: 'malformed',
-          words: [],
-          callList: [],
-          english: [],
-          vernacular: [],
-          error: `Malformed entries detected! Entries must use the format 'English = Vernacular'.`
-        };
-      }
-      
-      const parsed = entries.map(entry => {
-        const parts = entry.split('=').map(part => part.trim());
-        return {
-          english: parts[0],
-          vernacular: parts[1]
-        };
-      });
-
-      return {
-          mode: 'multi',
-          words: parsed.map(item => item.vernacular),
-          callList: parsed.map(item => item.english),
-          english: parsed.map(item => item.english),
-          vernacular: parsed.map(item => item.vernacular),
-          error: null
-      };
-    }
+    window.onload = updateSlotButtons;
 
     function updateWordCount() {
-      const input = document.getElementById('wordInput').value;
-      parsedData = parseInput(input);
+      const inputVal = document.getElementById('wordInput').value;
+      const lines = inputVal.split(/[\n,]+/).map(s => s.trim()).filter(s => s);
+      const isMulti = lines.some(l => l.includes('='));
       
-      const multiLangControls = document.getElementById('multiLangControls');
-      const toggleBilingualBtn = document.getElementById('toggleBilingualBtn');
-      const toggleMonolingualBtn = document.getElementById('toggleMonolingualBtn');
+      document.getElementById('wordCountLabel').innerText = `${lines.length} items entered.`;
+      document.getElementById('langButtons').style.display = isMulti ? 'flex' : 'none';
       
-      // Update the app mode based on the parsed data
-      if (parsedData.mode === 'multi') {
-          // If we were in single mode, switch to bilingual
-          if (appMode === 'single') {
-              appMode = 'bilingual';
-          }
-          multiLangControls.style.display = 'flex';
+      if (isMulti) {
+        wordData.left = lines.map(l => l.split('=')[0]?.trim());
+        wordData.right = lines.map(l => l.split('=')[1]?.trim());
+        document.getElementById('modeLegend').style.display = 'block';
+        updateLegend();
       } else {
-          // If the list is no longer multi-language, reset to single mode
-          appMode = 'single';
-          multiLangControls.style.display = 'none';
+        wordData.left = lines;
+        wordData.right = [];
+        appMode = 'single';
+        document.getElementById('modeLegend').style.display = 'none';
       }
+      cardsGenerated = false;
+    }
 
-      const wordCountElement = document.getElementById('wordCount');
-      const languageModeElement = document.getElementById('languageMode');
-      const feasibilityInfoElement = document.getElementById('feasibilityInfo');
-      
-      if (parsedData.error) {
-        wordCountElement.textContent = 'Error in format';
-        languageModeElement.textContent = '';
-        feasibilityInfoElement.textContent = parsedData.error;
-        feasibilityInfoElement.style.color = '#721c24';
-        feasibilityInfoElement.style.borderColor = '#f5c6cb';
-        return;
-      }
-      
-      const words = parsedData.words;
-      const uniqueWords = new Set(words).size;
-      const totalWords = words.length;
+    function updateLegend() {
+      const legend = document.getElementById('legendItems');
+      let lCol, rCol;
 
-      wordCountElement.textContent = `${totalWords} words entered (${uniqueWords} unique)`;
-      
-      let displayModeText = '';
-      if (appMode === 'single') {
-        displayModeText = 'Single Language';
-      } else if (appMode === 'bilingual') {
-        const cardLang = bilingualPrimaryLanguage === 'english' ? 'English' : 'Vernacular';
-        const listLang = bilingualPrimaryLanguage === 'english' ? 'Vernacular' : 'English';
-        displayModeText = `Bilingual Mode (Card: ${cardLang}, Call List: ${listLang})`;
-        toggleBilingualBtn.textContent = '↔️ Toggle Bilingual Language';
-        toggleMonolingualBtn.textContent = `➡️ Monolingual (${cardLang})`;
-      } else if (appMode === 'monolingual') {
-        const monoLang = monolingualLanguage === 'english' ? 'English' : 'Vernacular';
-        displayModeText = `Monolingual Mode (${monoLang})`;
-        toggleBilingualBtn.textContent = '⏪ Return to Bilingual';
-        toggleMonolingualBtn.textContent = `↔️ Toggle Monolingual Language`;
-      }
-      
-      languageModeElement.textContent = `Mode: ${displayModeText}`;
-      
-      const wordsPerCard = 16;
-      if (uniqueWords < wordsPerCard) {
-        feasibilityInfoElement.textContent = `Warning: You need at least ${wordsPerCard} unique words to generate a full card. Please add more words.`;
-        feasibilityInfoElement.style.color = '#856404';
-        feasibilityInfoElement.style.borderColor = '#ffeaa7';
+      if (appMode === 'bilingual') {
+        lCol = subMode === 'primary' ? 'var(--color-card)' : 'var(--color-call)';
+        rCol = subMode === 'primary' ? 'var(--color-call)' : 'var(--color-card)';
       } else {
-        feasibilityInfoElement.textContent = `Feasibility: You have enough words to generate cards.`;
-        feasibilityInfoElement.style.color = '#0c5460';
-        feasibilityInfoElement.style.borderColor = '#bee5eb';
+        lCol = subMode === 'primary' ? 'var(--color-card)' : 'var(--color-off)';
+        rCol = subMode === 'primary' ? 'var(--color-off)' : 'var(--color-card)';
       }
+
+      legend.innerHTML = `
+        <span style="color: ${lCol}">Apple</span> 
+        <span style="color: #4a5568"> = </span> 
+        <span style="color: ${rCol}">Manzana</span>
+      `;
     }
 
-    function showStatus(message, type) {
-      const statusElement = document.getElementById('status');
-      statusElement.textContent = message;
-      statusElement.className = `status ${type}`;
-      statusElement.style.display = 'block';
-    }
-    
-    // --- BUG FIX: I've updated this function to be more robust for ensuring unique shuffles ---
-    function shuffle(array) {
-      // Create a copy of the array to avoid modifying the original
-      const newArray = [...array];
-      for (let i = newArray.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-      }
-      return newArray;
-    }
-    // --------------------------------------------------------------------------------------
-    
-    function applyPrintSettings() {
-      const horizontal = (settings && settings.pageMargins && settings.pageMargins[settings.paperSize]) ? settings.pageMargins[settings.paperSize].horizontal : '1cm';
-      const topMargin = settings.topPrintMargin ? `${settings.topPrintMargin}cm` : '1.5cm';
-      const bottomMargin = settings.bottomPrintMargin ? `${settings.bottomPrintMargin}cm` : '0.5cm';
+    function generateCards(showModal = false) {
+      updateWordCount();
+      const size = parseInt(document.getElementById('gridSize').value);
+      const count = parseInt(document.getElementById('numCards').value);
+      const req = size * size;
+      
+      let cardPool, callPool;
 
-      const cellHeight = (settings && !isNaN(settings.cellHeight)) ? settings.cellHeight : 60;
-      const cellPadding = 5;
-      const cardSpacing = (settings && !isNaN(settings.cardSpacing)) ? settings.cardSpacing : 10;
-      const paperSize = (settings && settings.paperSize) ? settings.paperSize : 'a4';
-
-      document.documentElement.style.setProperty('--card-spacing', `${cardSpacing}mm`);
-      document.documentElement.style.setProperty('--cell-height', `${cellHeight}px`);
-      document.documentElement.style.setProperty('--cell-padding', `${cellPadding}px`);
-      document.documentElement.style.setProperty('--paper-size', paperSize);
-      document.documentElement.style.setProperty('--page-horizontal-margin', horizontal);
-      document.documentElement.style.setProperty('--top-print-margin', topMargin);
-      document.documentElement.style.setProperty('--bottom-print-margin', bottomMargin);
-    }
-    
-    function generateCards() {
-        try {
-            const input = document.getElementById('wordInput').value;
-            parsedData = parseInput(input);
-            
-            if (parsedData.error) {
-                showStatus(parsedData.error, 'error');
-                return;
-            }
-            
-            let cardWords = [];
-            let callListWords = [];
-
-            if (appMode === 'single') {
-                cardWords = parsedData.words;
-                callListWords = parsedData.callList;
-            } else if (appMode === 'bilingual') {
-                if (bilingualPrimaryLanguage === 'english') {
-                    cardWords = parsedData.english;
-                    callListWords = parsedData.vernacular;
-                } else {
-                    cardWords = parsedData.vernacular;
-                    callListWords = parsedData.english;
-                }
-            } else if (appMode === 'monolingual') {
-                if (monolingualLanguage === 'english') {
-                    cardWords = parsedData.english;
-                    callListWords = parsedData.english;
-                } else {
-                    cardWords = parsedData.vernacular;
-                    callListWords = parsedData.vernacular;
-                }
-            }
-            
-            const uniqueWords = Array.from(new Set(cardWords));
-            const wordsPerCard = 16;
-            
-            if (uniqueWords.length < wordsPerCard) {
-                showStatus(`Error: Not enough unique words. You need at least ${wordsPerCard}.`, 'error');
-                return;
-            }
-
-            showStatus('Generating cards...', 'info');
-
-            const numberOfCards = parseInt(document.getElementById('numberOfCards').value, 10);
-            const cardOutputDiv = document.getElementById('cardOutput');
-            const callListOutputDiv = document.getElementById('callListOutput');
-
-            cardOutputDiv.innerHTML = '';
-            callListOutputDiv.innerHTML = '';
-            
-            applyPrintSettings();
-            
-            const cardHTMLArray = [];
-            
-            const cardStyle = `
-              font-size: ${settings.fontSize}pt;
-              font-family: ${settings.fontFamily}, sans-serif;
-            `;
-            
-            for (let i = 0; i < numberOfCards; i++) {
-                // BUG FIX: The logic here was updated to ensure each card gets a new, truly unique shuffle.
-                const shuffledWords = shuffle(uniqueWords).slice(0, wordsPerCard);
-                
-                let cardContent = '';
-                for (let j = 0; j < wordsPerCard; j++) {
-                    cardContent += `<div class="bingo-cell">${shuffledWords[j]}</div>`;
-                }
-                
-                cardHTMLArray.push(`<div class="bingo-card" style="${cardStyle}">${cardContent}</div>`);
-            }
-            
-            cardOutputDiv.innerHTML = `<div class="card-container">${cardHTMLArray.join('')}</div>`;
-            cardOutputDiv.style.display = 'block';
-
-            // Generate Call List with 5 checkboxes per word, in line
-            const callListUniqueWords = Array.from(new Set(callListWords));
-            const callListHtml = callListUniqueWords.map((word, index) => {
-                const checkboxHtml = Array(5).fill().map((_, checkboxIndex) => `
-                    <input type="checkbox" id="call-${index}-${checkboxIndex}" name="call-word">
-                `).join('');
-
-                return `
-                    <li class="call-list-item">
-                        <div class="call-checkboxes">
-                            ${checkboxHtml}
-                        </div>
-                        <span class="call-list-label">${word}</span>
-                    </li>
-                `;
-            }).join('');
-
-            callListOutputDiv.innerHTML = `
-                <h3>Call List</h3>
-                <ul class="call-list-grid">
-                    ${callListHtml}
-                </ul>
-            `;
-            callListOutputDiv.style.display = 'block';
-            
-            document.getElementById('printCardsBtn').style.display = 'block';
-
-            showStatus('Cards and call list generated successfully!', 'success');
-        } catch (e) {
-            console.error('An error occurred during card generation:', e);
-            showStatus('An unexpected error occurred during card generation. Your saved settings may be corrupted. Please check your word list format and try again.', 'error');
+      if (wordData.right.length > 0) {
+        if (appMode === 'bilingual') {
+          cardPool = subMode === 'primary' ? wordData.left : wordData.right;
+          callPool = subMode === 'primary' ? wordData.right : wordData.left;
+        } else {
+          cardPool = subMode === 'primary' ? wordData.left : wordData.right;
+          callPool = cardPool;
         }
+      } else {
+        cardPool = callPool = wordData.left;
+      }
+
+      if (cardPool.length < req) return alert(`Need at least ${req} unique words!`);
+
+      const buffer = document.getElementById('printBuffer');
+      const preview = document.getElementById('previewArea');
+      buffer.innerHTML = preview.innerHTML = "";
+
+      // Truncated Preview Container
+      const previewContainer = document.createElement('div');
+      previewContainer.style.maxHeight = "500px";
+      previewContainer.style.overflow = "hidden";
+      previewContainer.style.position = "relative";
+      previewContainer.style.border = "1px solid #eee";
+      previewContainer.style.padding = "10px";
+
+      for (let i = 0; i < count; i++) {
+        const shuffled = [...cardPool].sort(() => 0.5 - Math.random()).slice(0, req);
+        const card = document.createElement('div');
+        card.className = 'bingo-card';
+        card.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+        shuffled.forEach(w => {
+          const cell = document.createElement('div');
+          cell.className = 'bingo-cell';
+          cell.innerText = w;
+          card.appendChild(cell);
+        });
+
+        buffer.appendChild(card.cloneNode(true));
+        if (i < 2) previewContainer.appendChild(card);
+      }
+
+      const fade = document.createElement('div');
+      fade.style.position = "absolute"; fade.style.bottom = "0"; fade.style.left = "0";
+      fade.style.width = "100%"; fade.style.height = "80px";
+      fade.style.background = "linear-gradient(transparent, white)";
+      fade.style.pointerEvents = "none";
+      previewContainer.appendChild(fade);
+      preview.appendChild(previewContainer);
+
+      // Create Call List
+      const callListContainer = document.createElement('div');
+      callListContainer.className = 'call-list-container';
+      callListContainer.innerHTML = "<h2 style='text-align:center;'>Call List</h2>";
+      
+      const grid = document.createElement('div');
+      grid.className = 'call-list-grid';
+      
+      const items = [...new Set(callPool)].sort();
+      items.forEach(w => {
+        grid.innerHTML += `<div class="call-list-item"><div class="checkbox-group">${'<input type="checkbox">'.repeat(5)}</div><span>${w}</span></div>`;
+      });
+      callListContainer.appendChild(grid);
+
+      buffer.appendChild(callListContainer.cloneNode(true));
+
+      // Truncated Modal Call List Preview
+      const callPreview = callListContainer.cloneNode(true);
+      callPreview.style.opacity = "0.5";
+      callPreview.style.maxHeight = "150px";
+      callPreview.style.overflow = "hidden";
+      callPreview.style.marginTop = "20px";
+      callPreview.style.borderTop = "2px dashed #ccc";
+      preview.appendChild(callPreview);
+
+      cardsGenerated = true;
+      if(showModal) document.getElementById('previewModal').style.display = 'block';
     }
-    
-    function printCards() {
-      applyPrintSettings();
+
+    function handlePrint() {
+      if (!cardsGenerated) return alert("Please click 'Generate & Preview' first!");
       window.print();
     }
-    
-    function toggleBilingual() {
-        if (appMode === 'monolingual') {
-            // Return to the last bilingual mode
-            appMode = 'bilingual';
-        } else if (appMode === 'bilingual') {
-            // Toggle the primary language
-            bilingualPrimaryLanguage = bilingualPrimaryLanguage === 'english' ? 'vernacular' : 'english';
-        }
-        updateWordCount();
-        generateCards();
-    }
-    
-    function toggleMonolingual() {
-        if (appMode === 'bilingual') {
-            // Switch to monolingual mode, using the current primary language
-            monolingualLanguage = bilingualPrimaryLanguage;
-            appMode = 'monolingual';
-        } else if (appMode === 'monolingual') {
-            // Toggle the monolingual language
-            monolingualLanguage = monolingualLanguage === 'english' ? 'vernacular' : 'english';
-        }
-        updateWordCount();
-        generateCards();
+
+    function toggleBilingual() { appMode = 'bilingual'; subMode = subMode === 'primary' ? 'secondary' : 'primary'; updateLegend(); generateCards(false); }
+    function toggleMonolingual() { appMode = 'monolingual'; subMode = subMode === 'primary' ? 'secondary' : 'primary'; updateLegend(); generateCards(false); }
+
+    function saveToSlot(id) {
+      const content = document.getElementById('wordInput').value;
+      if (!content.trim()) return;
+      const name = prompt("Name this wordlist:", localStorage.getItem('bingo_name_'+id) || "List " + id);
+      if (name) { localStorage.setItem('bingo_data_'+id, content); localStorage.setItem('bingo_name_'+id, name); updateSlotButtons(); }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('loadWordlist1').addEventListener('click', () => loadWordlist(1));
-      document.getElementById('loadWordlist2').addEventListener('click', () => loadWordlist(2));
-      document.getElementById('loadWordlist3').addEventListener('click', () => loadWordlist(3));
-      document.getElementById('clearWordlist1').addEventListener('click', () => clearWordlistHandler(1));
-      document.getElementById('clearWordlist2').addEventListener('click', () => clearWordlistHandler(2));
-      document.getElementById('clearWordlist3').addEventListener('click', () => clearWordlistHandler(3));
+    function clearSlot(id) { if(confirm("Clear slot " + id + "?")) { localStorage.removeItem('bingo_data_'+id); localStorage.removeItem('bingo_name_'+id); updateSlotButtons(); } }
 
-      document.getElementById('wordInput').addEventListener('input', updateWordCount);
-      document.getElementById('generateCardsBtn').addEventListener('click', generateCards);
-      document.getElementById('printCardsBtn').addEventListener('click', printCards);
-      
-      const settingsBtn = document.getElementById('settingsBtn');
-      const settingsModal = document.getElementById('settingsModal');
-      const saveSettingsBtn = document.getElementById('saveSettings');
-      const cancelSettingsBtn = document.getElementById('cancelSettings');
-      const fontSelect = document.getElementById('fontFamilySelect');
-      const customFontGroup = document.getElementById('customFontGroup');
-      
-      settingsBtn.addEventListener('click', () => {
-        loadSettings();
-        settingsModal.style.display = 'block';
-      });
+    function updateSlotButtons() {
+      for(let i=1; i<=3; i++) {
+        const name = localStorage.getItem('bingo_name_'+i) || `Slot ${i} (Empty)`;
+        const btn = document.getElementById('load'+i);
+        btn.innerText = name;
+        btn.onclick = () => {
+          const data = localStorage.getItem('bingo_data_'+i);
+          if (data) { document.getElementById('wordInput').value = data; updateWordCount(); }
+        };
+      }
+    }
 
-      saveSettingsBtn.addEventListener('click', () => {
-        saveSettings();
-        settingsModal.style.display = 'none';
-        showStatus('Settings saved!', 'success');
-        if (document.getElementById('cardOutput').innerHTML !== '') {
-            generateCards();
-        }
-      });
-
-      cancelSettingsBtn.addEventListener('click', () => {
-        settingsModal.style.display = 'none';
-      });
-
-      fontSelect.addEventListener('change', () => {
-        if (fontSelect.value === 'Custom') {
-          customFontGroup.style.display = 'block';
-        } else {
-          customFontGroup.style.display = 'none';
-        }
-      });
-      
-      document.getElementById('toggleBilingualBtn').addEventListener('click', toggleBilingual);
-      document.getElementById('toggleMonolingualBtn').addEventListener('click', toggleMonolingual);
-
-      // Initial load
-      loadSettings();
-      updateWordlistButtons();
-      document.getElementById('wordInput').value = getWordlist(1) || '';
-      updateWordCount();
-    });
+    function showSettings() { document.getElementById('settingsModal').style.display = 'block'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    function applySettings() {
+      const root = document.documentElement;
+      root.style.setProperty('--bingo-font-size', document.getElementById('optFontSize').value + 'pt');
+      root.style.setProperty('--cell-height', document.getElementById('optCellHeight').value + 'px');
+      root.style.setProperty('--card-spacing', document.getElementById('optSpacing').value + 'mm');
+      root.style.setProperty('--paper-size', document.getElementById('optPaper').value);
+      root.style.setProperty('--bingo-font-family', document.getElementById('optFontFamily').value || 'inherit');
+      closeModal('settingsModal');
+    }
   </script>
 </body>
 </html>
