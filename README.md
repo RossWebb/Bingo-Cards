@@ -20,9 +20,9 @@ A lightweight, robust, and browser-based **Bingo Card Generator** designed for e
 1.  **Open the Tool**: Simply open the `Bingo - most bug free so far.html` file in any modern web browser.
 2.  **Input Your Words**: 
     * Enter words separated by commas or new lines.
-    * For bilingual cards, use the format: `Hello = Hola`.
+    * For bilingual cards, use the format: `English = Vernacular`.
 3.  **Manage Wordlists**: Use the "Quick Start" section to upload `.txt` or `.csv` files or save your current list to one of the three slots.
-4.  **Configure Settings**: Click **Advanced Settings** to adjust the font size or paper margins to fit your specific printer.
+4.  **Configure Settings**: Click **Advanced Settings** to adjust the font size, cell height, or paper margins to fit your specific printer.
 5.  **Generate & Print**: Select the number of cards (up to 100), click **Generate**, and then **Print**.
 
 ---
@@ -32,7 +32,7 @@ A lightweight, robust, and browser-based **Bingo Card Generator** designed for e
 * **Grid Size**: 4x4 (16 cells).
 * **Zero Dependencies**: Written in pure HTML, CSS, and Vanilla JavaScript—no internet connection required to run.
 * **Storage**: Uses `localStorage` to keep your settings and wordlists persistent across sessions.
-* **Print Optimization**: Utilizes `@media print` CSS to ensure UI elements (like buttons and inputs) are hidden on the final paper copy.
+* **Print Optimization**: Utilizes `@media print` CSS to ensure UI elements like buttons and inputs are hidden on the final paper copy.
 
 ---
 
