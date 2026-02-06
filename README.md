@@ -29,7 +29,7 @@ A lightweight, robust, and browser-based **Bingo Card Generator** designed for e
 
 ## 🛠️ Technical Details
 
-* **Grid Size**: 4x4 (16 cells).
+* **Grid Size**: 4x4 (16 cells) - default. 3x3 and 5x5 available in a dropdown select box
 * **Zero Dependencies**: Written in pure HTML, CSS, and Vanilla JavaScript—no internet connection required to run.
 * **Storage**: Uses `localStorage` to keep your settings and wordlists persistent across sessions.
 * **Print Optimization**: Utilizes `@media print` CSS to ensure UI elements like buttons and inputs are hidden on the final paper copy.
