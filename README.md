@@ -1,4 +1,4 @@
-# 📄 Bingo Card Maker
+# 📄 Multilingual Bingo Card Maker
 
 A lightweight, robust, and browser-based **Bingo Card Generator** designed for educators and event organizers. This tool allows for the creation of randomized Bingo cards and matching "Call Lists" with native multi-language support and precise print controls.
 
