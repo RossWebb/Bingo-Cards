@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Bingo Card Maker - Pro Edition</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#764ba2">
   <style>
     :root {
       --cell-height: 60px;
@@ -406,5 +408,24 @@
       closeModal('settingsModal');
     }
   </script>
+  <script>
+  // PWA Registration Script
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js');
+  }
+
+  // Optional: Automatic Install Prompt on load
+  let deferredPrompt;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    // Show the prompt after 3 seconds of use
+    setTimeout(() => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+      }
+    }, 3000);
+  });
+</script>
 </body>
 </html>
