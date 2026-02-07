@@ -1,0 +1,15 @@
+{
+  "name": "Bingo Card Maker Pro",
+  "short_name": "BingoPro",
+  "start_url": "Index.html",
+  "display": "standalone",
+  "background_color": "#764ba2",
+  "theme_color": "#764ba2",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/5792/5792205.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
